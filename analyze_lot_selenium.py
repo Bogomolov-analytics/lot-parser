@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # --- НАСТРОЙКИ ---
-API_KEY = "sk-b06be7898c3b4611822548d67d06e177"
+API_KEY = "вставь сюда свой ключ"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 YANDEXDRIVER_PATH = r"C:\Users\user\Desktop\Torgi\yandexdriver.exe"
 PROFILE_DIR = r"C:\Users\user\Desktop\Torgi\profile"  # Папка для сохранения куки
