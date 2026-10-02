@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 import sys
 
-API_KEY = "sk-061bf4c04ee5470690bc7e41db461967"
+API_KEY = "вставь сюда свой ключ"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 
 def get_lot_data(url):
