@@ -12,7 +12,7 @@ import pickle
 from datetime import datetime
 
 # ============ НАСТРОЙКИ ============
-API_KEY = "sk-72660c5836f24bb29802b1016c58f104"
+API_KEY = "вставь свой ключ"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 YANDEXDRIVER_PATH = r"C:\Users\user\Desktop\Torgi\yandexdriver.exe"
 YANDEX_BROWSER_PATH = r"C:\Users\user\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
