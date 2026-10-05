@@ -12,7 +12,7 @@ import pickle
 from datetime import datetime
 
 # ============ НАСТРОЙКИ ============
-API_KEY = "вставь сюда свой ключ"
+API_KEY = "sk-72660c5836f24bb29802b1016c58f104"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 YANDEXDRIVER_PATH = r"C:\Users\user\Desktop\Torgi\yandexdriver.exe"
 YANDEX_BROWSER_PATH = r"C:\Users\user\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
@@ -20,10 +20,13 @@ COOKIES_FILE = r"C:\Users\user\Desktop\Torgi\cookies.pkl"
 PROCESSED_FILE = r"C:\Users\user\Desktop\Torgi\processed_ids.txt"
 WATCH_LIST_FILE = r"C:\Users\user\Desktop\Torgi\watch_list.txt"
 
-# === ФЛАГИ ===
-SKIP_AUTO = True   # True = пропускать авто, False = брать авто
+# === TELEGRAM ===
+TELEGRAM_TOKEN = "8924833830:AAEKH3daxYgis1l9xhlIcRdhsM_GqGNL1Sc"
+TELEGRAM_CHAT_ID = "-5485134623"
 
-FILTER_URL = "https://tbankrot.ru/?start_p1=&start_p2=1500000&p1=&p2=200000.00&min_p1=&min_p2=200000.00&sort=created&sort_order=desc&swp=any_word&search=&region%5B%5D=19&region%5B%5D=27&region%5B%5D=32&type_1=on&num=&place%5B%5D=109&place%5B%5D=119&place%5B%5D=120&place%5B%5D=121&place%5B%5D=122&place%5B%5D=123&place%5B%5D=124&place%5B%5D=125&place%5B%5D=126&place%5B%5D=127&place%5B%5D=129&place%5B%5D=131&place%5B%5D=132&place%5B%5D=135&place%5B%5D=136&place%5B%5D=137&place%5B%5D=138&place%5B%5D=139&place%5B%5D=140&place%5B%5D=141&place%5B%5D=142&place%5B%5D=145&place%5B%5D=146&place%5B%5D=149&place%5B%5D=151&place%5B%5D=152&place%5B%5D=153&place%5B%5D=154&place%5B%5D=157&place%5B%5D=158&place%5B%5D=160&place%5B%5D=161&place%5B%5D=162&place%5B%5D=165&place%5B%5D=166&place%5B%5D=167&place%5B%5D=168&place%5B%5D=170&place%5B%5D=179&place%5B%5D=180&place%5B%5D=181&place%5B%5D=183&place%5B%5D=184&place%5B%5D=185&place%5B%5D=186&place%5B%5D=187&place%5B%5D=188&place%5B%5D=189&place%5B%5D=191&place%5B%5D=1003&place%5B%5D=1004&place%5B%5D=1005&place%5B%5D=1006&place%5B%5D=1007&place%5B%5D=1010&place%5B%5D=1011&place%5B%5D=1012&place%5B%5D=1013&place%5B%5D=1014&place%5B%5D=1015&place%5B%5D=1016&place%5B%5D=1017&place%5B%5D=1018&place%5B%5D=1019&place%5B%5D=1020&place%5B%5D=1021&place%5B%5D=1022&place%5B%5D=1023&place%5B%5D=1024&place%5B%5D=1025&place%5B%5D=1026&place%5B%5D=1037&place%5B%5D=1041&place%5B%5D=2027&place%5B%5D=2028&place%5B%5D=2029&place%5B%5D=2030&place%5B%5D=2033&place%5B%5D=2034&place%5B%5D=2035&place%5B%5D=2036&place%5B%5D=2038&place%5B%5D=2039&place%5B%5D=2040&place%5B%5D=2042&place%5B%5D=2043&place%5B%5D=2044&debtor=&au=&org=&stop=&pp_1=&pp_2=&st_1=&st_2=&sz_1=&sz_2=&ez_1=&ez_2=&et_1=&et_2=&parent_cat=2%2C4%2C10&sub_cat=4%2C26%2C27%2C28%2C29&spec_search=1&spec_type=&show_period=all&mark=&pattern_name=Долгожданная+покупка"
+SKIP_AUTO = True
+
+FILTER_URL = "https://tbankrot.ru/?pattern_id=446827&pattern_name=Долгожданная+покупка&sort=created&sort_order=desc&show_period=all"
 
 BATCH_SIZE = 5
 MAX_PRICE = 200_000
@@ -33,8 +36,10 @@ BAD_WORDS = [
     "1/6", "1/7", "1/8", "1/10", "1/100", "1/1000",
     "квартира", "жилой дом", "жилое помещение", "комната",
     "земельный участок", "земли", "участок", "садовый дом",
-    "дача", "садовый участок", "снт",
-    "иной объект",
+    "дача", "садовый участок", "снт", "иной объект",
+    "оружие", "карабин", "ружьё", "ружье", "пистолет", "винтовка",
+    "сайга", "ствол", "патрон", "огнестрел", "гладкоствольное",
+    "нарезное", "ижмех", "мр-", "тоз-",
 ]
 
 AUTO_WORDS = [
@@ -43,6 +48,39 @@ AUTO_WORDS = [
     "фургон", "прицеп", "полуприцеп", "автобус", "тягач",
     "квадроцикл", "снегоход",
 ]
+
+
+def send_to_telegram(text):
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": text[:4000],
+            "disable_web_page_preview": True,
+        }
+        r = requests.post(url, json=payload, timeout=20)
+        if r.status_code == 200:
+            print("  📨 Отправлено в Telegram")
+        else:
+            print(f"  ⚠️ Telegram ошибка: {r.status_code} {r.text[:200]}")
+    except Exception as e:
+        print(f"  ⚠️ Telegram не отправлен: {e}")
+
+
+def extract_field(analysis, field_name):
+    """Достаёт строку ПОЛЕ: значение из ответа DeepSeek."""
+    m = re.search(rf"{field_name}[:\s]+(.+)", analysis, re.IGNORECASE)
+    if m:
+        return m.group(1).strip().split("\n")[0]
+    return ""
+
+
+def extract_verdict(analysis):
+    return extract_field(analysis, "ВЕРДИКТ")
+
+
+def extract_liquidity(analysis):
+    return extract_field(analysis, "ЛИКВИДНОСТЬ")
 
 
 def get_processed_ids():
@@ -173,39 +211,32 @@ def get_lot_status(full_text):
 def get_priority_tag(full_text, current_price):
     start = get_start_date(full_text)
     if start and (datetime.now() - start).days <= 3:
-        return "🔥 СВЕЖИЙ"
-
+        return "🔥 СВЕЖИЙ (торги только начались)"
     min_price = get_min_price(full_text)
     if min_price and current_price:
         if current_price <= min_price * 1.15:
-            return "💰 НА ДНЕ"
-
-    return "➖ СЕРЕДИНА"
+            return "💰 НА ДНЕ (цена у минимума)"
+    return "➖ СЕРЕДИНА (цена ещё не упала)"
 
 
 def is_bad_lot(title, full_text, price_str):
     text = (title + " " + full_text).lower()
-
     for word in BAD_WORDS:
         if word in text:
             return True, f"мусор: {word}"
-
     if SKIP_AUTO:
         for word in AUTO_WORDS:
             if word in text:
                 return True, f"авто (SKIP_AUTO=True): {word}"
-
     price = parse_price(price_str)
     if price is not None and price > MAX_PRICE:
         return True, f"цена {price} > {MAX_PRICE}"
-
     return False, "ок"
 
 
 def get_lot_links(driver):
     seen = set()
     links = []
-
     last_height = driver.execute_script("return document.body.scrollHeight")
     for _ in range(15):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -214,7 +245,6 @@ def get_lot_links(driver):
         if new_height == last_height:
             break
         last_height = new_height
-
     elements = driver.find_elements(By.CSS_SELECTOR, "a[href*='/item?id=']")
     for el in elements:
         href = el.get_attribute("href")
@@ -224,7 +254,6 @@ def get_lot_links(driver):
         if match and href not in seen:
             seen.add(href)
             links.append(href)
-
     return links
 
 
@@ -234,7 +263,6 @@ def get_lot_data_with_selenium(driver, url):
     time.sleep(3)
     full_text = driver.find_element(By.TAG_NAME, "body").text
     title = driver.title
-
     price = "Не найдена"
     for line in full_text.split("\n"):
         low = line.lower()
@@ -243,32 +271,35 @@ def get_lot_data_with_selenium(driver, url):
                 continue
             price = line.strip()
             break
-
     return {"url": url, "title": title, "price": price, "full_text": full_text[:4000]}
 
 
 def analyze_with_deepseek(lot_data, extra_context="", max_retries=2):
     headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
-
     prompt = f"""
-    Ты — аналитик по банкротным торгам. Проанализируй лот:
-    Ссылка: {lot_data['url']}
-    Название: {lot_data['title']}
-    Цена: {lot_data['price']}
-    {extra_context}
-    Текст страницы (фрагмент): {lot_data['full_text']}
+Ты — аналитик банкротных торгов. Цель клиента: купить дёшево → продать за 4–6 недель.
 
-    Цель клиента: купить дёшево → продать быстро (4–6 недель).
-    Берём ТМЦ, оборудование, инструмент, стройматериалы, небольшую недвижку (гараж, кладовка).
-    НЕ берём: авто, доли, квартиры, дома, участки.
+Лот:
+Ссылка: {lot_data['url']}
+Название: {lot_data['title']}
+Цена: {lot_data['price']}
+{extra_context}
+Текст: {lot_data['full_text'][:2000]}
 
-    Проверь по чек-листу рисков (залог, запреты, долги).
-    Предложи точку входа и предварительную маржу.
-    Ответ дай кратко, по пунктам.
-    """
+НЕ берём: авто, доли, квартиры, дома, участки, оружие.
+Берём: ТМЦ, оборудование, инструмент, стройматериалы, гараж/кладовка.
 
+Ответь СТРОГО в таком формате (без воды, без разжёвывания):
+
+ВЕРДИКТ: БРАТЬ или ОТКАЗ (до 10 слов)
+ЛИКВИДНОСТЬ: ВЫСОКАЯ / СРЕДНЯЯ / НИЗКАЯ (до 10 слов — почему)
+ЦЕНА ОТСЕЧЕНИЯ: <цифра> руб (если есть в тексте, иначе "не указана")
+ТОЧКА ВХОДА: <диапазон> руб
+МАРЖА: <диапазон> руб за 4–6 недель
+РИСКИ: <1–2 главных риска, до 15 слов>
+ДЕЙСТВИЕ: <что сделать сейчас, до 15 слов>
+"""
     data = {"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}], "stream": False}
-
     for attempt in range(max_retries):
         try:
             response = requests.post(DEEPSEEK_URL, headers=headers, json=data, timeout=90)
@@ -283,41 +314,75 @@ def analyze_with_deepseek(lot_data, extra_context="", max_retries=2):
     return "DeepSeek: не удалось получить ответ после 2 попыток"
 
 
-def main():
-    processed = get_processed_ids()
+def safe_get(driver, url, max_attempts=3, pause=10):
+    for attempt in range(max_attempts):
+        try:
+            driver.get(url)
+            return True
+        except Exception as e:
+            print(f"  ⚠️ Попытка {attempt + 1}/{max_attempts} не удалась: {e}")
+            if attempt < max_attempts - 1:
+                time.sleep(pause)
+    return False
+
+
+def create_driver():
     options = Options()
     options.binary_location = YANDEX_BROWSER_PATH
+
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--disable-features=AutomationControlled")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option("useAutomationExtension", False)
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36")
+
     service = Service(executable_path=YANDEXDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=options)
 
+    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+        "source": """
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            });
+        """
+    })
+
+    return driver
+
+
+def main():
+    processed = get_processed_ids()
+    driver = create_driver()
+
     try:
         print("Открываем Т-Банкрот...")
-        driver.get("https://tbankrot.ru/")
+        safe_get(driver, "https://tbankrot.ru/")
         time.sleep(3)
 
-        cookies_loaded = load_cookies(driver)
-        if cookies_loaded:
-            print("✅ Куки загружены. Проверь — залогинен ли ты?")
-        else:
-            print("Куки не найдены.")
-
         driver.maximize_window()
-        print(">>> Окно развёрнуто. У тебя 30 секунд осмотреться <<<")
-        print("    Если НЕ залогинен — залогинься сейчас (логин, пароль, СМС).")
-        time.sleep(30)
 
-        page_text = driver.find_element(By.TAG_NAME, "body").text.lower()
+        print()
+        print("=" * 60)
+        print("ЛОГИН ВРУЧНУЮ:")
+        print("1. Переключись в окно Яндекс.Браузера")
+        print("2. Залогинься: логин, пароль, СМС")
+        print("3. Убедись, что видишь свой НИК в правом верхнем углу")
+        print("4. Вернись в это окно и нажми ENTER")
+        print("=" * 60)
+        print()
 
-        if "войти" in page_text[:3000] or "зарегистрироваться" in page_text[:3000]:
-            print("⚠️ Не залогинен. У тебя 180 секунд на вход...")
-            time.sleep(180)
-            save_cookies(driver)
-        else:
-            print("✅ Уже залогинен. Идём дальше.")
-            if not cookies_loaded:
-                save_cookies(driver)
+        input(">>> Залогинился? Нажми ENTER для продолжения... ")
 
-        driver.get(FILTER_URL)
+        save_cookies(driver)
+
+        print("\nПауза 10 секунд перед переходом на фильтр...")
+        time.sleep(10)
+
+        print("Открываем фильтр...")
+        if not safe_get(driver, FILTER_URL, max_attempts=3, pause=10):
+            print("❌ Не удалось открыть фильтр. Прерываем.")
+            return
+
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         time.sleep(10)
 
@@ -335,7 +400,6 @@ def main():
         for i in range(0, len(links), BATCH_SIZE):
             batch = links[i:i + BATCH_SIZE]
             print(f"\n===== Батч {i // BATCH_SIZE + 1} из {total_batches} =====")
-
             for link in batch:
                 match = re.search(r"id=(\d+)", link)
                 if not match:
@@ -343,17 +407,12 @@ def main():
                 lot_id = match.group(1)
                 if lot_id in processed:
                     continue
-
                 print(f"\n--- Лот ID {lot_id} ---")
                 try:
                     lot_data = get_lot_data_with_selenium(driver, link)
                     current_price = parse_price(lot_data['price'])
 
-                    bad, reason = is_bad_lot(
-                        lot_data['title'],
-                        lot_data['full_text'],
-                        lot_data['price']
-                    )
+                    bad, reason = is_bad_lot(lot_data['title'], lot_data['full_text'], lot_data['price'])
                     if bad:
                         print(f"⏭ Пропуск: {reason}")
                         save_processed_id(lot_id)
@@ -361,13 +420,11 @@ def main():
                         continue
 
                     status = get_lot_status(lot_data['full_text'])
-
                     if status == "sold":
                         print(f"⏭ Sold: куплен")
                         save_processed_id(lot_id)
                         skip_count += 1
                         continue
-
                     if status in ("failed", "expired"):
                         reason = "не состоялись" if status == "failed" else "срок истёк"
                         print(f"📌 Watch-list: {reason}")
@@ -379,6 +436,7 @@ def main():
                     priority = get_priority_tag(lot_data['full_text'], current_price)
 
                     extra_context = ""
+                    repeat_note = ""
                     old_price_str, old_date = find_in_watchlist(lot_data['title'])
                     if old_price_str:
                         repeat_count += 1
@@ -387,25 +445,41 @@ def main():
                         if old_price and current_price:
                             diff_pct = (current_price - old_price) / old_price * 100
                             diff_str = f" (было {old_price:.0f} ₽ → стало {current_price:.0f} ₽, изменение {diff_pct:+.1f}%)"
-
                         print(f"⚠️ ПОВТОРНЫЙ лот (был в watch-list {old_date}){diff_str}")
-                        extra_context = f"⚠️ ЭТО ПОВТОРНЫЙ ЛОТ. Ранее был в watch-list от {old_date} с ценой {old_price_str}.{diff_str} Учти это в анализе — стоит ли брать сейчас или причина несостоявшихся торгов сохранилась."
+                        repeat_note = f"⚠️ ПОВТОРНЫЙ ЛОТ (был в watch-list {old_date}){diff_str}"
+                        extra_context = f"⚠️ ЭТО ПОВТОРНЫЙ ЛОТ. Ранее был в watch-list от {old_date} с ценой {old_price_str}.{diff_str} Учти это в анализе."
 
                     print(f"Приоритет: {priority}")
                     print(f"Цена: {lot_data['price']}")
                     print("Отправляем в DeepSeek...")
-
                     analysis = analyze_with_deepseek(lot_data, extra_context)
-                    print(f"### Анализ ({priority}):")
+                    print(f"### Анализ:")
                     print(analysis)
+
+                    verdict = extract_verdict(analysis)
+                    liquidity = extract_liquidity(analysis)
+
+                    tg_text = ""
+                    if verdict:
+                        tg_text += f"🎯 {verdict}\n"
+                    if liquidity:
+                        tg_text += f"📊 Ликвидность: {liquidity}\n"
+                    tg_text += "\n"
+                    tg_text += f"{priority}\n"
+                    if repeat_note:
+                        tg_text += f"{repeat_note}\n"
+                    tg_text += f"📦 {lot_data['title']}\n"
+                    tg_text += f"💰 {lot_data['price']}\n"
+                    tg_text += f"🔗 {lot_data['url']}\n\n"
+                    tg_text += analysis
+                    send_to_telegram(tg_text)
+
                     save_processed_id(lot_id)
                     new_count += 1
                     time.sleep(2)
-
                 except Exception as e:
                     print(f"⚠️ Ошибка на лоте {lot_id}: {e}")
                     continue
-
             time.sleep(5)
 
         print(f"\n✅ Обработано: {new_count}, пропущено: {skip_count}, в watch-list: {watch_count}, повторных: {repeat_count}")
