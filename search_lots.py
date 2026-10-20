@@ -14,15 +14,15 @@ from datetime import datetime
 # ============ НАСТРОЙКИ ============
 API_KEY = "вставь свой ключ"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
-YANDEXDRIVER_PATH = r"C:\Users\user\Desktop\Torgi\yandexdriver.exe"
-YANDEX_BROWSER_PATH = r"C:\Users\user\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
-COOKIES_FILE = r"C:\Users\user\Desktop\Torgi\cookies.pkl"
-PROCESSED_FILE = r"C:\Users\user\Desktop\Torgi\processed_ids.txt"
-WATCH_LIST_FILE = r"C:\Users\user\Desktop\Torgi\watch_list.txt"
+YANDEXDRIVER_PATH = "yandexdriver.exe"
+YANDEX_BROWSER_PATH = "browser.exe"
+COOKIES_FILE = "cookies.pkl"
+PROCESSED_FILE = "processed_ids.txt"
+WATCH_LIST_FILE = "watch_list.txt"
 
 # === TELEGRAM ===
-TELEGRAM_TOKEN = "8924833830:AAEKH3daxYgis1l9xhlIcRdhsM_GqGNL1Sc"
-TELEGRAM_CHAT_ID = "-5485134623"
+TELEGRAM_TOKEN = "тоken"
+TELEGRAM_CHAT_ID = "ID"
 
 SKIP_AUTO = True
 
